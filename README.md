@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="80" src="./Images/WAVE.png">
+  <img width="650" src="./Images/WAVE.png">
 </p>
 <h2 align="center">Cough Signal Processing ( csp ) </h2>
 
@@ -31,7 +31,7 @@ data = sp.spectrogram_data()
 
 #### output
 
-<img width="80" src="./Images/spectrogram_one.png">
+<img width="650" src="./Images/spectrogram_one.png">
 
 
 ```python
@@ -57,7 +57,7 @@ Audio_aug = Audio_augmentation.speed_tuning(data['signal'])
 
 #### output
 
-<img width="80" src="./Images/spectrogram_two.png">
+<img width="650" src="./Images/spectrogram_two.png">
 
 
 #### Time shifting
@@ -70,4 +70,4 @@ aug = Audio_augmentation.time_shifting(data['signal'])
 
 #### output
 
-<img width="80" src="./Images/spectrogram_three.png">
+<img width="650" src="./Images/spectrogram_three.png">
