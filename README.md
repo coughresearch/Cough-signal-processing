@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="450" src="./Images/WAVE.png">
+  <img width="350" src="./Images/WAVE.png">
 </p>
 <h2 align="center">Cough Signal Processing ( csp ) </h2>
 
