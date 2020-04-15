@@ -5,7 +5,7 @@
 
 
 
-<p align="center">A micro framework for cough singal processing / NLG </p>
+<p align="center">A micro framework for cough singal processing </p>
 
 
 ### Features
