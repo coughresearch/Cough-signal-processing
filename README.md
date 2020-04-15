@@ -6,6 +6,8 @@
 
 
 <p align="center">A micro framework for cough singal processing </p>
+<p align="center"> Contribute and Support </p>
+
 
 [![GitHub license](https://img.shields.io/badge/License-Creative%20Commons%20Attribution%204.0%20International-blue)](https://github.com/coughresearch/Cough-signal-processing/blob/master/LICENSE)
 [![GitHub commit](https://img.shields.io/github/last-commit/coughresearch/Cough-signal-processing)](https://github.com/coughresearch/Cough-signal-processing/commits/master)
