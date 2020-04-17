@@ -66,3 +66,9 @@ aug = Audio_augmentation.time_shifting(data['signal'])
 #### output
 
 <img width="350" src="./Images/spectrogram_three.png">
+
+
+#### Feature extraction { @thileepanp }
+<p align="center">
+  <img width="250" src="./Images/Audio Feature Classification.PNG">
+</p>
