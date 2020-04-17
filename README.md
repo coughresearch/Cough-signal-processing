@@ -70,5 +70,5 @@ aug = Audio_augmentation.time_shifting(data['signal'])
 
 #### Feature extraction { @thileepanp }
 <p align="center">
-  <img width="250" src="./Images/Audio Feature Classification.PNG">
+  <img width=650" src="./Images/Audio Feature Classification.PNG">
 </p>
