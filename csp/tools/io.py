@@ -7,7 +7,6 @@ from pathlib import Path
 from numpy import ndarray
 from librosa import load as librosa_load
 
-__author__ = 'Konstantinos Drossos'
 __docformat__ = 'reStructuredText'
 __all__ = ['load_audio_file']
 
