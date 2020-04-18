@@ -1,18 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# imports
+from csp.tools import io
 
 __author__ = 'Konstantinos Drossos'
 __docformat__ = 'reStructuredText'
-__all__ = []
+__all__ = ['io']
 
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
 
 # EOF
