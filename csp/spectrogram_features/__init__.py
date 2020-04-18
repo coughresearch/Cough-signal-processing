@@ -3,7 +3,6 @@
 
 # imports
 
-__author__ = 'Konstantinos Drossos'
 __docformat__ = 'reStructuredText'
 __all__ = []
 
