@@ -26,10 +26,10 @@
 ### Quick Start
 
 ```python
-from csp import Spectrogram_features
+from csp import SpectrogramFeatures
 
 # path of the cough audio
-sp   = Spectrogram_features('cough_sound_9412.m4a')
+sp   = SpectrogramFeatures('cough_sound_9412.m4a')
 data = sp.spectrogram_data()
 
 ```
@@ -43,10 +43,10 @@ data = sp.spectrogram_data()
 #### Speed tuning
 
 ```python
-from csp import Audio_augmentation
+from csp import AudioAugmentation
 
 # Audio_augmentation speed tuning
-Audio_aug = Audio_augmentation.speed_tuning(data['signal'])
+Audio_aug = AudioAugmentation.speed_tuning(data['signal'])
 
 ```
 
@@ -59,7 +59,7 @@ Audio_aug = Audio_augmentation.speed_tuning(data['signal'])
 ```python
 
 # Audio augmentation time shifting
-aug = Audio_augmentation.time_shifting(data['signal'])
+aug = AudioAugmentation.time_shifting(data['signal'])
 
 ```
 
