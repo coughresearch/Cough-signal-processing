@@ -13,7 +13,7 @@ class SpectrogramFeatures(object):
     
         self.audio_path = audio_path
         self.EPS = 1e-8
-        self.start = int(np.random.uniform(-4800,4800))
+        self.start = int(np.random.uniform(-4800, 4800))
 
     @staticmethod
     def wav_to_signal(audio_path):
