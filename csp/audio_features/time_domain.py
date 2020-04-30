@@ -179,7 +179,7 @@ def get_lpc_error(signal, lpc_order):
 
 # https://stackoverflow.com/questions/25107806/estimate-formants-using-lpc-in-python/27352810
 # scikits.talkbox import lpc is not working anymore, using librosa.core.lpc to calculate lpc
-# thank you for Lukasz for help : https://stackoverflow.com/questions/61519826/
+# thank you to Lukasz for help : https://stackoverflow.com/questions/61519826/
 # how-to-decide-filter-order-in-linear-prediction-coefficients-lpc-while-calcu/61528322#61528322
 def formant frequencies(signal, total_formats, order_type, sample_freq, formant_value = None):
 
