@@ -59,6 +59,7 @@ def zero_crossing_rate(audio_data: ndarray,
         axis=axis)
 
 
+
 # https://stackoverflow.com/questions/33720395/can-pydub-set-the-maximum-minimum-volume
 # set a value for maximum/minimum volume, that is, 
 # there won't be too loud or too quiet in output audio file
@@ -136,6 +137,7 @@ def cough_singal_preprocessing(cough_signal,
     # All continuous analog signal is sampled at a frequency F
     sample_freq  = cough_signal.set_frame_rate(sample_frequency)
     
+    # we can take 1 minute slices
     loudnes_value = get_loudness(sample_freq, slice_size=60*1000)
     if func_log:
         print("loudness", loudnes_value)
