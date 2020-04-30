@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+
 from typing import Optional
 
 
@@ -177,7 +179,9 @@ def get_lpc_error(signal, lpc_order):
 
 # https://stackoverflow.com/questions/25107806/estimate-formants-using-lpc-in-python/27352810
 # scikits.talkbox import lpc is not working anymore, using librosa.core.lpc to calculate lpc
-def formant frequencies(signal, total_formats, signal_order, sample_freq):
+# thank you for Lukasz for help : https://stackoverflow.com/questions/61519826/
+# how-to-decide-filter-order-in-linear-prediction-coefficients-lpc-while-calcu/61528322#61528322
+def formant frequencies(signal, total_formats, order_type, sample_freq, formant_value = None):
 
         """
         In human voice analysis formants are referred as the resonance of the human vocal
@@ -189,15 +193,28 @@ def formant frequencies(signal, total_formats, signal_order, sample_freq):
         F2, F3, F4) in feature set for each frame.
         
         """
-    lpc_features = librosa.lpc(signal, signal_order)
-    # Get roots.
-    rts = [r for r in numpy.roots(A) if numpy.imag(r) >= 0]
-    # Get angles.
+    # https://www.sciencedirect.com/science/article/abs/pii/S0167639301000498
+    signal_order_ = {'gautam_method' : formant_value + 2  'other_method' : int(2 + sample_freq/1000) }
+                        
+    A = librosa.core.lpc(y, signal_order_box[order_type])
+    rts = np.roots(A)
+    rts = rts[np.imag(rts) >= 0]
     angz = np.arctan2(np.imag(rts), np.real(rts))
-    # Get frequencies.
-    frqs = sorted(angz * (sample_freq / (2 * math.pi)))
-    return frqs
+    frqs = angz * sample_freq / (2 *  np.pi)
+    return frqs.sort()
         
+
+                        
+# noise generation
+def fftnoise(f):
+    f = np.array(f, dtype='complex')
+    Np = (len(f) - 1) // 2
+    phases = np.random.rand(Np) * 2 * np.pi
+    phases = np.cos(phases) + 1j * np.sin(phases)
+    f[1:Np+1] *= phases
+    f[-1:-1-Np:-1] = np.conj(f[1:Np+1])
+    return np.fft.ifft(f).real
+                        
 
 # https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
 def melfrequency_cepstral_coefficients(mfcc_type, 
