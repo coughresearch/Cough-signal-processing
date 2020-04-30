@@ -196,7 +196,7 @@ def formant frequencies(signal, total_formats, order_type, sample_freq, formant_
     # https://www.sciencedirect.com/science/article/abs/pii/S0167639301000498
     signal_order_ = {'gautam_method' : formant_value + 2  'other_method' : int(2 + sample_freq/1000) }
                         
-    A = librosa.core.lpc(y, signal_order_box[order_type])
+    A = librosa.core.lpc(y, signal_order_[order_type])
     rts = np.roots(A)
     rts = rts[np.imag(rts) >= 0]
     angz = np.arctan2(np.imag(rts), np.real(rts))
