@@ -268,3 +268,64 @@ def melfrequency_cepstral_coefficients(mfcc_type,
                 'mfcc_delta' : mfcc_delta, 
                 'mfcc_delta2': mfcc_delta2
                 }
+
+# https://books.google.co.in/books?id=86RBDwAAQBAJ&pg=PA56&lpg=PA56&dq=zero+crossing+rate+divided+by+length+minus+1&source=bl&ots=SsCSzXx72-&
+# sig=ACfU3U1MUEJ-J9fdBizOC3HXky-IeYcH1A&hl=en&sa=X&ved=2ahUKEwiA5Obg95DpAhVcCTQIHVywDy0Q6AEwC3oECAsQAQ#v=onepage&
+# q=zero%20crossing%20rate%20divided%20by%20length%20minus%201&f=false
+def compute_zcr(signal):
+    
+    def change_sign(v1, v2):
+        return v1 * v2 < 0
+
+    s = 0
+    for ind, _ in enumerate(signal):
+        if ind + 1 < len(signal):
+            if change_sign(signal[ind], signal[ind+1]):
+                s += 1
+    return s/(len(signal)-1)  # return zcr for each frame
+
+
+ 
+# https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0162128&type=printable
+# https://stackoverflow.com/questions/15450192/fastest-way-to-compute-entropy-in-python
+
+def count_unique(signal):
+    # np.bincount not working out for float matrix
+    # modifying the bincount for other than int values
+    
+    if signal.ndim ==1:
+        signal = signal
+    else:
+        signal = signal.flatten()
+
+    uniq_keys = np.unique(signal)
+    bins = uniq_keys.searchsorted(signal)
+    return uniq_keys, np.bincount(bins)
+
+
+# https://stackoverflow.com/questions/15450192/fastest-way-to-compute-entropy-in-python
+def signal_entropy(signal):
+    
+    # try different methods : shannon
+    
+    """ Computes entropy of signal distribution. """
+
+    signal_size = len(signal)
+
+    if signal_size <= 1:
+        return 0
+
+    a,b = count_unique(signal)
+    probs = b / signal_size
+    n_classes = np.count_nonzero(probs)
+
+    if signal_size <= 1:
+        return 
+
+    ent = 0.
+
+    # Compute standard entropy.
+    for i in probs:
+        ent -= i * math.log(i, math.exp(1))
+
+    return ent
