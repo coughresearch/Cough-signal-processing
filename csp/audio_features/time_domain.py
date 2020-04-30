@@ -150,3 +150,104 @@ def cough_singal_preprocessing(cough_signal,
         print("segmentation", get_silence)
     pre_Emph_fi  = pre_Emph_filter(segmentation, value, filter_type = filter_type)
     return pre_Emph_fi
+
+def get_auto_corr_matrix(signal, order):
+    ac = librosa.core.autocorrelate(signal)
+    R = np.zeros((order, order))
+    
+    for i in range(order):
+        for j in range(order):
+            R[i,j] = ac[np.abs(i-j)]
+    
+    return R, ac[1:(order+1)]
+
+
+def get_lpc_error(signal, lpc_order):
+    ac = librosa.core.autocorrelate(signal)
+    lpc = scipy.linalg.solve_toeplitz((ac[:lpc_order], ac[:lpc_order]), ac[1:(lpc_order+1)])
+    flipped_lpc = np.flip(lpc)
+    
+    e = np.zeros_like(signal)
+    for j in range(1, signal.shape[0]):
+        buff_min = max(0, j-lpc_order)
+        e[j] = signal[j] - np.sum(flipped_lpc[(buff_min-j):]*signal[buff_min:j])
+    
+    return lpc, e
+
+
+# https://stackoverflow.com/questions/25107806/estimate-formants-using-lpc-in-python/27352810
+# scikits.talkbox import lpc is not working anymore, using librosa.core.lpc to calculate lpc
+def formant frequencies(signal, total_formats, signal_order, sample_freq):
+
+        """
+        In human voice analysis formants are referred as the resonance of the human vocal
+        tract. In cough analysis, it is reasonable to expect that the
+        resonances of the overall airway that contribute to the
+        generation of a cough sound will be represented in the
+        formant structure; mucus can change acoustic properties of
+        airways. Calculating four formant frequencies (F1,
+        F2, F3, F4) in feature set for each frame.
+        
+        """
+    lpc_features = librosa.lpc(signal, signal_order)
+    # Get roots.
+    rts = [r for r in numpy.roots(A) if numpy.imag(r) >= 0]
+    # Get angles.
+    angz = np.arctan2(np.imag(rts), np.real(rts))
+    # Get frequencies.
+    frqs = sorted(angz * (sample_freq / (2 * math.pi)))
+    return frqs
+        
+
+# https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
+def melfrequency_cepstral_coefficients(mfcc_type, 
+                                       signal, 
+                                       sample_freq, 
+                                       frame_size , 
+                                       numcep, 
+                                       winfunc, 
+                                       sound_file = None):
+    
+    
+    """ The mel frequency cepstral coefficients (MFCCs) of a signal are a small 
+        set of features (usually about 10–20) 
+        which concisely describe the overall shape of a spectral envelope. . 
+        mfcc is used to calculate mfccs of a signal.
+        
+        Resource : http://www.practicalcryptography.com/miscellaneous/
+        machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
+        
+        frame energy is appended to each feature vector. Delta and Delta-Delta features are also appended.
+        
+    """
+    
+    if mfcc_type == 'lib':
+        y, sr = librosa.load(sound_file)
+        mfccs = librosa.feature.mfcc(y, sr = sr)
+        #Displaying  the MFCCs
+        librosa.display.specshow(mfccs, sr = sr, x_axis='time')
+        mfcc_delta = librosa.feature.delta(mfcc)
+        mfcc_delta2 = librosa.feature.delta(mfcc, order=2)
+        return {
+                'mfcc' : mfccs, 
+                'mfcc_delta' : mfcc_delta, 
+                'mfcc_delta2': mfcc_delta2
+                }
+    
+    else:
+        mfcc = spe_feats.mfcc(signal , 
+                              sample_freq , 
+                              winlen  = frame_size, 
+                              winstep = frame_size, 
+                              numcep  = numcep,
+                              winfunc = winfunc
+                             )
+        
+        mfcc_delta  = spe_feats.delta(mfcc,1)
+        mfcc_delta2 = spe_feats.delta(mfcc_delta_feat,1)
+        
+        return {
+                'mfcc' : mfccs, 
+                'mfcc_delta' : mfcc_delta, 
+                'mfcc_delta2': mfcc_delta2
+                }
