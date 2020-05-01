@@ -11,11 +11,10 @@ import pandas as pd
 from typing import Optional
 from pydub import AudioSegment
 from scipy.signal import lfilter
-from pydub.utils import mediainfo
-from pydub.utils import make_chunks
 import python_speech_features as spf
 from scipy.stats import kurtosis, skew
 from pydub import AudioSegment,silence
+from pydub.utils import mediainfo,make_chunks
 from librosa.feature import zero_crossing_rate as librosa_zcr
 
 __docformat__ = 'reStructuredText'
