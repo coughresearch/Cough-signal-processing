@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-
-from typing import Optional
-
-
-from numpy import ndarray
-from librosa.feature import zero_crossing_rate as librosa_zcr
-
-from pydub import AudioSegment,silence
-from pydub.utils import make_chunks
+import os
+import sys
+import math
+import librosa
 import scipy as sp
+import numpy as np
+import pandas as pd
+from typing import Optional
+from pydub import AudioSegment
+from scipy.signal import lfilter
+from pydub.utils import mediainfo
+from pydub.utils import make_chunks
+import python_speech_features as spf
+from scipy.stats import kurtosis, skew
+from pydub import AudioSegment,silence
+from librosa.feature import zero_crossing_rate as librosa_zcr
 
 __docformat__ = 'reStructuredText'
 __all__ = ['zero_crossing_rate']
