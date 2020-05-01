@@ -181,21 +181,22 @@ def get_lpc_error(signal, lpc_order):
 # scikits.talkbox import lpc is not working anymore, using librosa.core.lpc to calculate lpc
 # thank you to Lukasz for help : https://stackoverflow.com/questions/61519826/
 # how-to-decide-filter-order-in-linear-prediction-coefficients-lpc-while-calcu/61528322#61528322
-def formant frequencies(signal, total_formats, order_type, sample_freq, formant_value = None):
+def formant_frequencies(signal, total_formats, order_type, sample_freq, formant_value = None):
+    
 
-        """
-        In human voice analysis formants are referred as the resonance of the human vocal
-        tract. In cough analysis, it is reasonable to expect that the
-        resonances of the overall airway that contribute to the
-        generation of a cough sound will be represented in the
-        formant structure; mucus can change acoustic properties of
-        airways. Calculating four formant frequencies (F1,
-        F2, F3, F4) in feature set for each frame.
-        
-        """
+    """
+    In human voice analysis formants are referred as the resonance of the human vocal
+    tract. In cough analysis, it is reasonable to expect that the
+    resonances of the overall airway that contribute to the
+    generation of a cough sound will be represented in the
+    formant structure; mucus can change acoustic properties of
+    airways. Calculating four formant frequencies (F1,
+    F2, F3, F4) in feature set for each frame.
+
+    """
     # https://www.sciencedirect.com/science/article/abs/pii/S0167639301000498
-    signal_order_ = {'gautam_method' : formant_value + 2  'other_method' : int(2 + sample_freq/1000) }
-                        
+    signal_order_ = {'gautam_method' : formant_value + 2, 'other_method' : int(2 + sample_freq/1000) }
+
     A = librosa.core.lpc(y, signal_order_[order_type])
     rts = np.roots(A)
     rts = rts[np.imag(rts) >= 0]
@@ -330,7 +331,7 @@ def signal_entropy(signal):
 
     return ent
 
- def waveletTransform(lagu):
+def waveletTransform(lagu):
     cA, cD = pywt.dwt(lagu, 'db1')
     return cD
 
@@ -348,22 +349,19 @@ def magnitude(crossCorrelation):
 
 # wavelenght denoising of time signals
 def denoise_wvlt( x, wavelet, level):
+    
+    
     """
-
     1. Adapted from waveletSmooth function found here:
-
     http://connor-johnson.com/2016/01/24/using-pywavelets-to-remove-high-frequency-noise/
-
     2. Threshold equation and using hard mode in threshold as mentioned
-
     by Tomas Vantuch:
-
     http://dspace.vsb.cz/bitstream/handle/10084/133114/VAN431_FEI_P1807_1801V001_2018.pdf
-
     """
+    
     # Decompose to get the wavelet coefficients
     coeff = pywt.wavedec( x, wavelet, mode="per" )
-    # Calculate sigma for threshold as defined in http://dspace.vsb.cz/bitstream/handle/10084/133114/VAN431_FEI_P1807_1801V001_2018.pdf
+    # Calculate sigma for threshold as defined in             http://dspace.vsb.cz/bitstream/handle/10084/133114/VAN431_FEI_P1807_1801V001_2018.pdf
     # As noted by @harshit92 MAD referred to in the paper is Mean Absolute Deviation not Median Absolute Deviation
 
     sigma = (1/0.6745) * maddest( coeff[-level] )
@@ -375,7 +373,7 @@ def denoise_wvlt( x, wavelet, level):
 
   
   
-  def skew_and_kurtosis(signal_frame):
+def skew_and_kurtosis(signal_frame):
     
     return {
             'skew' : skew(signal_frame), 
