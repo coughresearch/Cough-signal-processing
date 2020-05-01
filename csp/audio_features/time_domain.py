@@ -372,3 +372,13 @@ def denoise_wvlt( x, wavelet, level):
     coeff[1:] = ( pywt.threshold( i, value=uthresh, mode='hard') for i in coeff[1:] )  
     # Reconstruct the signal using the thresholded coefficients
     return pywt.waverec( coeff, wavelet, mode='per' )
+
+  
+  
+  def skew_and_kurtosis(signal_frame):
+    
+    return {
+            'skew' : skew(signal_frame), 
+            'kurtosis' : kurtosis(signal_frame)
+            }
+ 
