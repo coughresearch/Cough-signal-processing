@@ -38,8 +38,8 @@
  10 | MFCC delta, delta2 | Delta-MFCC and Delta-Delta-MFCC are used to extract the features of speakers. |
 | 11 | Skewness | skewness is a measure of the asymmetry of the probability distribution |
 | 12 | Power Spectral Density (PSD) | A Power Spectral Density (PSD) is the measure of signal's power content versus frequency. |
-| 12 | Linear Predictive Coding (LPC) | Representing the spectral envelope of a digital signal of speech in compressed form |
-| 12 | Continuous Wavelet Transform (CWT) | provides an overcomplete representation of a signal by letting the translation and scale parameter of the wavelets vary continuously. |
+| 13 | Linear Predictive Coding (LPC) | Representing the spectral envelope of a digital signal of speech in compressed form |
+| 14 | Continuous Wavelet Transform (CWT) | provides an overcomplete representation of a signal by letting the translation and scale parameter of the wavelets vary continuously. |
 
 
  ## More features and suggestions are welcome.
