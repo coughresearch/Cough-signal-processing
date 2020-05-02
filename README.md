@@ -22,6 +22,28 @@
 - Applying different types of filters
 - Audio augmentation techniques
 
+| Feature ID    | Feature Name  | Description  |
+| :-------------: |:-------------:|-----|
+| 1 | Zero Crossing Rate      |  The rate of sign-changes of the signal during the duration of a particular frame.  |
+| 2 | Energy | The sum of squares of the signal values, normalized by the respective frame length. | 
+| 3 | Entropy of Energy | The entropy of sub-frames' normalized energies. It can be interpreted as a measure of abrupt changes. | 
+| 4 | Bispectrum Score (BGS) | 3rd order spectrum of the
+signal is known as the bispectrum.| 
+| 5 | Non-gaussianity score(NGS) | NGS gives the measure
+of non-gaussianity of a given segment of data. | 
+| 6 | Formant frequencies (FF) | A formant is the spectral shaping that results from an acoustic resonance of the human vocal tract. |
+| 7 | log energy (LogE) | The log energy for every subsegment |
+| 8 | kurtosis (Kurt) | kurtosis is a measure of the "tailedness" of the probability distribution of a real-valued random variable. |
+| 9 | MFCCs | Mel Frequency Cepstral Coefficients form a cepstral representation where the frequency bands are not linear but distributed according to the mel-scale. |
+ 10 | MFCC delta, delta2 | Delta-MFCC and Delta-Delta-MFCC are used to extract the features of speakers. |
+| 11 | Skewness | skewness is a measure of the asymmetry of the probability distribution |
+| 12 | Power Spectral Density (PSD) | A Power Spectral Density (PSD) is the measure of signal's power content versus frequency. |
+| 12 | Linear Predictive Coding (LPC) | Representing the spectral envelope of a digital signal of speech in compressed form |
+| 12 | Continuous Wavelet Transform (CWT) | provides an overcomplete representation of a signal by letting the translation and scale parameter of the wavelets vary continuously. |
+
+
+ <p align="center"> More features and suggestions are welcome. </p>
+
 
 ### Quick Start
 
