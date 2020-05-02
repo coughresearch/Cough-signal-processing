@@ -2,6 +2,15 @@ import modin.pandas as modin
 from csp import compute_zcr,formant_frequencies,logenergy_computation, \
 get_f0, freq_from_autocorr_improved, freq_from_autocorr,skew_and_kurtosis, \
 apply_se,apply_f0,melfrequency_cepstral_coefficients
+from csp import cough_singal_preprocessing
+import python_speech_features as spe_feats
+
+
+import numpy as np
+from tqdm import tqdm
+from pydub import AudioSegment
+from pydub.utils import mediainfo
+import os
 
 def col_generator(feature_name, total_col):
     col_names = [str(feature_name) + '_feature_' + str(col_na) for col_na in range(total_col)]
@@ -32,7 +41,6 @@ def arrange_features(features_list, total_col, feature_type):
         
     
     return features
-
 
 def cough_features_extraction( subframe, 
                               frame_length, 
@@ -105,3 +113,77 @@ def cough_features_extraction( subframe,
     concat_all                  = modin.concat([arrange_feat,formant_arrange_feat,all_feat],axis=1)
     
     return concat_all
+
+
+def singal_preprocessing(config_dict, audio_file_frame):
+    
+    # config file 
+    
+    
+    audio_id     = list(audio_file_frame['cough_id'])
+    audio_name   = list(audio_file_frame['file_name'])
+    labels       = list(audio_file_frame['labels'])
+    folder_path  = config_dict['folder_path']
+    frame_length = int(config_dict['sample_frequency'] * config_dict['frame_size_ms'])
+
+    
+    features = []
+    
+    # opening the file
+    
+
+    for file_id, name, label in tqdm(zip(audio_id,audio_name,labels)):
+        audio_file_path = folder_path + '/' + name
+        open_           = AudioSegment.from_wav(audio_file_path)
+        sample_rate     = float(mediainfo(audio_file_path)['sample_rate'])
+        
+        # ----------------------------------------------------------------
+        
+        
+        # preprocessing
+        set_s = cough_singal_preprocessing(cough_signal      = open_, 
+                                           sample_frequency  = config_dict['sample_frequency'], 
+                                           target_fre        = config_dict['target_fre'], 
+                                           silence_length    = config_dict['min_silence_len'],
+                                           silence_threshold = config_dict['silence_thresh'], 
+                                           value             = config_dict['value'],
+                                           filter_type       = 'fa')
+        
+        # -------------------------------------------------------------------
+        # feature_extraction
+        
+        
+        all_values = []
+
+        for audio_frame in set_s:
+            new_values = cough_features_extraction(subframe = audio_frame, 
+                                      frame_length = frame_length, 
+                                      sliding_window = config_dict['sliding_window'], 
+                                      mfcc_type = config_dict['sliding_window'], 
+                                      sample_frequency = config_dict['sample_frequency'], 
+                                      frame_size_ms = config_dict['frame_size_ms'], 
+                                      numcep = config_dict['numcep'], 
+                                      total_formants = config_dict['total_formants'], 
+                                      filter_order = config_dict['filter_order'], 
+                                      formant_value = config_dict['formant_value'], 
+                                      features_list= ['default'])
+            all_values.append(new_values)
+
+        feat = modin.concat(all_values)
+        
+        a_ids    = []
+        a_labels = []
+        
+        for fill_ in range(len(feat)):
+            a_ids.append(file_id)
+            a_labels.append(label)
+        
+        feat['id']    = a_ids
+        feat['label'] = a_labels
+        
+        features.append(feat)
+        
+    all_f = pd.concat(features)
+    all_f.reset_index(drop=True, inplace=True)
+
+    return all_f
