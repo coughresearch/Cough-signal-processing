@@ -8,13 +8,22 @@ import librosa
 import scipy as sp
 import numpy as np
 import pandas as pd
-from typing import Optional
+from time import time
+from numpy.fft import rfft
+from functools import reduce
+from scipy.io import wavfile
+
 from pydub import AudioSegment
 from scipy.signal import lfilter
+from pydub.utils import mediainfo
+from pydub.utils import make_chunks
 import python_speech_features as spf
+from scipy.interpolate import interp1d
 from scipy.stats import kurtosis, skew
 from pydub import AudioSegment,silence
-from pydub.utils import mediainfo,make_chunks
+from scipy.signal import correlate, fftconvolve
+from numpy import argmax, mean, diff, log, nonzero
+from scipy.signal import blackmanharris, correlate
 from librosa.feature import zero_crossing_rate as librosa_zcr
 
 __docformat__ = 'reStructuredText'
@@ -256,11 +265,12 @@ def melfrequency_cepstral_coefficients(mfcc_type,
         librosa.display.specshow(mfccs, sr = sr, x_axis='time')
         mfcc_delta = librosa.feature.delta(mfcc)
         mfcc_delta2 = librosa.feature.delta(mfcc, order=2)
+        
         return {
                 'mfcc' : mfccs, 
                 'mfcc_delta' : mfcc_delta, 
                 'mfcc_delta2': mfcc_delta2
-                }
+                } 
     
     else:
         mfcc = spf.mfcc(signal , 
@@ -319,9 +329,8 @@ def count_unique(signal):
 
 
 # https://stackoverflow.com/questions/15450192/fastest-way-to-compute-entropy-in-python
-def signal_entropy(signal):
-    
-    # try different methods : shannon
+# todo :  try different methods : shannon
+def signal_entropy(signal, entropy_type = math.exp(1)):
     
     """ Computes entropy of signal distribution. """
 
@@ -336,14 +345,22 @@ def signal_entropy(signal):
 
     if signal_size <= 1:
         return 
-
     ent = 0.
-
     # Compute standard entropy.
     for i in probs:
-        ent -= i * math.log(i, math.exp(1))
+        ent -= i * math.log(i + 2e-22 , entropy_type)
 
     return ent
+
+
+def apply_se(signal):
+    
+    total_se = []
+    for subframe in signal:
+        total_se.append(signal_entropy(subframe, entropy_type = math.exp(1)))
+        
+    return total_se
+        
 
 def waveletTransform(lagu):
     cA, cD = pywt.dwt(lagu, 'db1')
@@ -396,7 +413,7 @@ def skew_and_kurtosis(signal_frame):
         all_values['skew'].append(skew(subframe))
         all_values['kurtosis'].append(kurtosis(subframe))
         
-    return all_values
+    return {'all_features' : all_values }
  
 
 
@@ -547,7 +564,16 @@ def logenergy_computation(signal):
         constant     = 2e-22
         log_base     = np.log10
         signal_power = sub_frame**2
-        # flatten      = np.array(sub_frame).flatten()
+#         flatten      = np.array(sub_frame).flatten()
         sum_all      = reduce(lambda x, y: (x + y), signal_power)/len(sub_frame) + constant
         total_energy.append(log_base(sum_all))
     return total_energy
+
+
+
+def apply_f0(x,fs):
+    
+    all_values = []
+    for subframe in x:
+        all_values.append(freq_from_autocorr(subframe,fs))
+    return all_values
