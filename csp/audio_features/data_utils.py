@@ -1,14 +1,13 @@
 import modin.pandas as modin
 from csp import compute_zcr,formant_frequencies,logenergy_computation, \
-get_F0, freq_from_autocorr_improved, freq_from_autocorr,skew_and_kurtosis, \
-apply_se,apply_f0
+get_f0, freq_from_autocorr_improved, freq_from_autocorr,skew_and_kurtosis, \
+apply_se,apply_f0,melfrequency_cepstral_coefficients
 
 def col_generator(feature_name, total_col):
     col_names = [str(feature_name) + '_feature_' + str(col_na) for col_na in range(total_col)]
     return col_names
 
 def arrange_features(features_list, total_col, feature_type):
-    
     
     features = []
     
@@ -20,8 +19,8 @@ def arrange_features(features_list, total_col, feature_type):
         mfcc_delta_fetures         = modin.DataFrame(features_list['mfcc_delta'])
         mfcc_delta_fetures.columns = col_generator('mfcc_delta', total_col)
         
-        mfcc_dd_fetures            = modin.DataFrame(features_list['mfcc'])
-        mfcc_dd_fetures.columns    = col_generator('mfcc_features_', total_col)
+        mfcc_dd_fetures            = modin.DataFrame(features_list['mfcc_delta2'])
+        mfcc_dd_fetures.columns    = col_generator('mfcc_dd_fetures', total_col)
         
         features.extend([mfcc_fetures,mfcc_delta_fetures,mfcc_dd_fetures])
         features = modin.concat(features, axis=1)
@@ -83,9 +82,10 @@ def cough_features_extraction( subframe,
     
     # mfcc
     segmentation_frames          = spe_feats.sigproc.framesig(subframe, frame_length, frame_length, sliding_window)
-    mfcc_features                = melfrequency_cepstral_coefficients('pyspeech',segmentation_frames,sample_frequency ,frame_size_ms , numcep, sliding_window)
+    mfcc_features                = melfrequency_cepstral_coefficients('pyspeech',subframe,sample_frequency ,frame_size_ms , numcep, sliding_window)
     
     arrange_feat                 = arrange_features(mfcc_features,13,'mfcc')
+    
     # formant feq
     formant_features             = formant_frequencies(signal = segmentation_frames, 
                                                        total_formats = total_formants , 
