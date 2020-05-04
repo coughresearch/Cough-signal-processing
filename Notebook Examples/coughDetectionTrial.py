@@ -152,3 +152,16 @@ history = model.fit(X_train, y_train,
                                                 # for validation because we have few instances, later when we have
                                                 #more data we will make an split train/validation/test
 print('\nhistory dict:', history.history)
+
+
+# Plot the metrics........
+    #: Use history.history dictionary as input here
+def plotMetrics (metricsDict):
+    keylist = list(metricsDict)
+    for i in range(len(keylist)):
+        plt.subplot(len(keylist), 1, i+1)
+        plt.plot(metricsDict[keylist[i]])
+        plt.xlabel(keylist[i])
+    plt.show()
+
+
