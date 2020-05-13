@@ -5,7 +5,7 @@
 
 
 
-<p align="center">A micro framework for cough singal processing </p>
+<p align="center">A micro framework for cough signal processing </p>
 <p align="center"> Contribute and Support </p>
 
 
@@ -33,13 +33,13 @@
 | 5 | Non-gaussianity score(NGS) | NGS gives the measure of non-gaussianity of a given segment of data. | 
 | 6 | Formant frequencies (FF) | A formant is the spectral shaping that results from an acoustic resonance of the human vocal tract. |
 | 7 | log energy (LogE) | The log energy for every subsegment |
-| 8 | kurtosis (Kurt) | kurtosis is a measure of the "tailedness" of the probability distribution of a real-valued random variable. |
+| 8 | kurtosis (Kurt) | Kurtosis is a measure of the "tailedness" of the probability distribution of a real-valued random variable. |
 | 9 | MFCCs | Mel Frequency Cepstral Coefficients form a cepstral representation where the frequency bands are not linear but distributed according to the mel-scale. |
  10 | MFCC delta, delta2 | Delta-MFCC and Delta-Delta-MFCC are used to extract the features of speakers. |
-| 11 | Skewness | skewness is a measure of the asymmetry of the probability distribution |
+| 11 | Skewness | Skewness is a measure of the asymmetry of the probability distribution |
 | 12 | Power Spectral Density (PSD) | A Power Spectral Density (PSD) is the measure of signal's power content versus frequency. |
 | 13 | Linear Predictive Coding (LPC) | Representing the spectral envelope of a digital signal of speech in compressed form |
-| 14 | Continuous Wavelet Transform (CWT) | provides an overcomplete representation of a signal by letting the translation and scale parameter of the wavelets vary continuously. |
+| 14 | Continuous Wavelet Transform (CWT) | Provides an overcomplete representation of a signal by letting the translation and scale parameter of the wavelets vary continuously. |
 
 
  ## More features and suggestions are welcome.
