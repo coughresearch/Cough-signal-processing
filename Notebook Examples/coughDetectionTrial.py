@@ -4,13 +4,10 @@ import librosa
 import os
 import itertools
 import glob
-from sksound.sounds import Sound
 from random import shuffle
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
-from librosa.feature import melspectrogram
-from librosa.util import normalize
 from librosa.display import waveplot
 from tensorflow.keras.layers import MaxPooling2D, Conv2D, Dense, Activation, Flatten, Dropout, Input
 from tensorflow.keras.models import Model
@@ -20,56 +17,59 @@ from tensorflow.keras.optimizers import Adam, RMSprop
 
 #Read original data
 
-def readCoughData(file):
-    origData,origSampFreq = librosa.load(file, sr=None)
-    return origData, origSampFreq
+class CoughDetection:
 
-# resample original data to 16000 Khz
+    class audio_processing():
+        def __init__(self, file):
+            self.file = file
+            self.target_sr = 16000
+            self.axis=0
 
-def resample(originalData, origSampFreq, targetSampFreq):
-    resampledData = librosa.resample(originalData, origSampFreq, targetSampFreq)
-    return resampledData
+        def process_audio(self):
+            s,sr = librosa.load(self.file, sr=None)
+            resampled_sr = librosa.resample(s, sr, self.target_sr)
+            normalized_data = librosa.util.normalize(resampled_sr, self.axis)
+            return normalized_data
 
-# Normalize Sound Data
+    # Calculate Mel-Spectogram
 
-def normalizeSound(resampledData, axis):
-    """ Axis is 0 for row-wise and 1
-    for column wise"""
-    normalizedData = normalize(resampledData, axis)
-    return normalizedData
+    class cough_features():
+        def __init__(self, soure_directory, hop_length, win_lenght, sr):
+            self.source_directory = soure_directory
+            self.hop_length = hop_length
+            self.win_length = win_lenght
+            self.sr = sr
 
-# Calculate Mel-Spectogram
+    def calculateMelSpectogram(normalizedData, hop_length, win_length, sr):
+        #newSamplingFreq = 16000
+        S=librosa.feature.melspectrogram(normalizedData, sr=sr, hop_length=hop_length, win_length=win_length)
+        return S
 
-def calculateMelSpectogram(normalizedData, hop_length, win_length, sr):
-    #newSamplingFreq = 16000
-    S=librosa.feature.melspectrogram(normalizedData, sr=sr, hop_length=hop_length, win_length=win_length)
-    return S
+    # plot orginal time domain data
 
-# plot orginal time domain data
+    def plotSound(soundData, sr, x_axis_string):
+        waveplot(soundData, sr, x_axis=x_axis_string)
 
-def plotSound(soundData, sr, x_axis_string):
-    waveplot(soundData, sr, x_axis=x_axis_string)
+    #Plot melspectogram
 
-#Plot melspectogram
+    def plotMelSpectogram(S, sr, ref=np.max):
+        plt.figure(figsize=(10, 4))
+        S_dB = librosa.power_to_db(S, ref=np.max)
+        librosa.display.specshow(S_dB, x_axis='time',y_axis='mel', sr=16000,)
+        plt.colorbar(format='%+2.0f dB')
+        plt.title('Mel-frequency spectrogram')
+        plt.tight_layout()
+        plt.show()
 
-def plotMelSpectogram(S, sr, ref=np.max):
-    plt.figure(figsize=(10, 4))
-    S_dB = librosa.power_to_db(S, ref=np.max)
-    librosa.display.specshow(S_dB, x_axis='time',y_axis='mel', sr=16000,)
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Mel-frequency spectrogram')
-    plt.tight_layout()
-    plt.show()
-
-# Function to Extract MelSpectrum
-def featureExtraction(audioFile, targetSampFreq, axis, hop_length,win_length):
-    y, y_sr = readCoughData(file=audioFile)
-    resampledData = resample(originalData=y, origSampFreq=y_sr, targetSampFreq=targetSampFreq)
-    normalizedData = normalizeSound(resampledData, axis=axis)
-    S = calculateMelSpectogram(normalizedData=normalizedData, hop_length=hop_length, win_length=win_length, sr=targetSampFreq)
-    #plotSound(soundData=normalizedData, sr=targetSampFreq,x_axis_string='time')
-    #plotMelSpectogram(S, sr=targetSampFreq, ref=np.max)
-    return S
+    # Function to Extract MelSpectrum
+    def featureExtraction(audioFile, targetSampFreq, axis, hop_length,win_length):
+        y, y_sr = readCoughData(file=audioFile)
+        resampledData = resample(originalData=y, origSampFreq=y_sr, targetSampFreq=targetSampFreq)
+        normalizedData = normalizeSound(resampledData, axis=axis)
+        S = calculateMelSpectogram(normalizedData=normalizedData, hop_length=hop_length, win_length=win_length, sr=targetSampFreq)
+        #plotSound(soundData=normalizedData, sr=targetSampFreq,x_axis_string='time')
+        #plotMelSpectogram(S, sr=targetSampFreq, ref=np.max)
+        return S
 
 # Training ...............
 
