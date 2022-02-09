@@ -10,7 +10,7 @@
 
 
 [![GitHub license](https://img.shields.io/badge/License-Creative%20Commons%20Attribution%204.0%20International-blue)](https://github.com/coughresearch/Cough-signal-processing/blob/master/LICENSE)
-[![GitHub commit](https://img.shields.io/github/last-commit/coughresearch/Cough-signal-processing)](https://github.com/coughresearch/Cough-signal-processing/commits/master)
+[![GitHub commit](https://img.shields.io/github/last-commit/coughresearch/Cough-signal-processing)](https://github.com/coughresearch/Cough-signal-processing/commits/main)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ### Features
