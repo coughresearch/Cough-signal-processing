@@ -5,7 +5,7 @@
 
 
 
-<p align="center">A micro framework for cough singal processing </p>
+<p align="center">A micro framework for cough signal processing </p>
 <p align="center"> Contribute and Support </p>
 
 
