@@ -85,6 +85,21 @@ aug = AudioAugmentation.time_shifting(data['signal'])
 
 ```
 
+
+If you find this repository useful, please cite our project:
+
+```
+
+@misc{CSP2019,
+  author = {Pal, Ankit},
+  title = {{Cough Signal Processing ( csp )}},
+  year = {2019},
+  month = {June},
+  url = {https://github.com/coughresearch/Cough-signal-processing},
+}
+
+```
+
 #### output
 
 <img width="350" src="./Images/spectrogram_three.png">
